@@ -170,6 +170,10 @@ void AsyncWebServer::onRequestBody(ArBodyHandlerFunction fn) {
   _catchAllHandler->onBody(fn);
 }
 
+AsyncWebHandler &AsyncWebServer::catchAllHandler() const {
+  return *_catchAllHandler;
+}
+
 void AsyncWebServer::reset() {
   _rewrites.clear();
   _handlers.clear();
