@@ -96,8 +96,21 @@ void AsyncWebServerResponse::setContentType(const char *type) {
 }
 
 bool AsyncWebServerResponse::removeHeader(const char *name) {
-  for (auto i = _headers.begin(); i != _headers.end(); ++i) {
+  bool h_erased = false;
+  for (auto i = _headers.begin(); i != _headers.end();) {
     if (i->name().equalsIgnoreCase(name)) {
+      _headers.erase(i);
+      h_erased = true;
+    } else {
+      ++i;
+    }
+  }
+  return h_erased;
+}
+
+bool AsyncWebServerResponse::removeHeader(const char *name, const char *value) {
+  for (auto i = _headers.begin(); i != _headers.end(); ++i) {
+    if (i->name().equalsIgnoreCase(name) && i->value().equalsIgnoreCase(value)) {
       _headers.erase(i);
       return true;
     }
@@ -112,6 +125,15 @@ const AsyncWebHeader *AsyncWebServerResponse::getHeader(const char *name) const 
   return (iter == std::end(_headers)) ? nullptr : &(*iter);
 }
 
+bool AsyncWebServerResponse::headerMustBePresentOnce(const String &name) {
+  for (uint8_t i = 0; i < T_only_once_headers_len; i++) {
+    if (name.equalsIgnoreCase(T_only_once_headers[i])) {
+      return true;
+    }
+  }
+  return false;
+}
+
 bool AsyncWebServerResponse::addHeader(const char *name, const char *value, bool replaceExisting) {
   for (auto i = _headers.begin(); i != _headers.end(); ++i) {
     if (i->name().equalsIgnoreCase(name)) {
@@ -120,9 +142,11 @@ bool AsyncWebServerResponse::addHeader(const char *name, const char *value, bool
         // remove, break and add the new one
         _headers.erase(i);
         break;
-      } else {
+      } else if (headerMustBePresentOnce(i->name())) {  // we can have only one header with that name
         // do not update
         return false;
+      } else {
+        break;  // accept multiple headers with the same name
       }
     }
   }
