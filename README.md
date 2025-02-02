@@ -577,13 +577,13 @@ request->multipart();     // bool:    True if the request has content type "mult
 int headers = request->headers();
 int i;
 for(i=0;i<headers;i++){
-  AsyncWebHeader* h = request->getHeader(i);
+  const AsyncWebHeader* h = request->getHeader(i);
   Serial.printf("HEADER[%s]: %s\n", h->name().c_str(), h->value().c_str());
 }
 
 //get specific header by name
 if(request->hasHeader("MyHeader")){
-  AsyncWebHeader* h = request->getHeader("MyHeader");
+  const AsyncWebHeader* h = request->getHeader("MyHeader");
   Serial.printf("MyHeader: %s\n", h->value().c_str());
 }
 

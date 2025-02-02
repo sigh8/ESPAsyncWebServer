@@ -953,6 +953,8 @@ protected:
   size_t _writtenLength;
   WebResponseState _state;
 
+  static bool headerMustBePresentOnce(const String &name);
+
 public:
   static const char *responseCodeToString(int code);
 
@@ -979,6 +981,7 @@ public:
     return addHeader(name.c_str(), value, replaceExisting);
   }
   bool removeHeader(const char *name);
+  bool removeHeader(const char *name, const char *value);
   const AsyncWebHeader *getHeader(const char *name) const;
   const std::list<AsyncWebHeader> &getHeaders() const {
     return _headers;

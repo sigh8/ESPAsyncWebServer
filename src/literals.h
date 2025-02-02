@@ -28,6 +28,7 @@ static constexpr const char *T_Content_Disposition = "content-disposition";
 static constexpr const char *T_Content_Encoding = "content-encoding";
 static constexpr const char *T_Content_Length = "content-length";
 static constexpr const char *T_Content_Type = "content-type";
+static constexpr const char *T_Content_Location = "content-location";
 static constexpr const char *T_Cookie = "cookie";
 static constexpr const char *T_CORS_ACAC = "access-control-allow-credentials";
 static constexpr const char *T_CORS_ACAH = "access-control-allow-headers";
@@ -36,6 +37,7 @@ static constexpr const char *T_CORS_ACAO = "access-control-allow-origin";
 static constexpr const char *T_CORS_ACMA = "access-control-max-age";
 static constexpr const char *T_CORS_O = "origin";
 static constexpr const char *T_data_ = "data: ";
+static constexpr const char *T_Date = "date";
 static constexpr const char *T_DIGEST = "digest";
 static constexpr const char *T_DIGEST_ = "digest ";
 static constexpr const char *T_ETag = "etag";
@@ -71,6 +73,7 @@ static constexpr const char *T_retry_after = "retry-after";
 static constexpr const char *T_nn = "\n\n";
 static constexpr const char *T_rn = "\r\n";
 static constexpr const char *T_rnrn = "\r\n\r\n";
+static constexpr const char *T_Server = "server";
 static constexpr const char *T_Transfer_Encoding = "transfer-encoding";
 static constexpr const char *T_TRUE = "true";
 static constexpr const char *T_UPGRADE = "upgrade";
@@ -182,5 +185,9 @@ static constexpr const char *T_HTTP_CODE_503 = "Service Unavailable";
 static constexpr const char *T_HTTP_CODE_504 = "Gateway Time-out";
 static constexpr const char *T_HTTP_CODE_505 = "HTTP Version not supported";
 static constexpr const char *T_HTTP_CODE_ANY = "Unknown code";
+
+static constexpr const uint8_t T_only_once_headers_len = 11;
+static constexpr const char *T_only_once_headers[] = {T_Content_Length,    T_Content_Type,     T_Date,   T_ETag,    T_Last_Modified, T_LOCATION, T_retry_after,
+                                                      T_Transfer_Encoding, T_Content_Location, T_Server, T_WWW_AUTH};
 
 }  // namespace asyncsrv
