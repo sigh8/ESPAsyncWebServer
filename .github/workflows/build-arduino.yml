@@ -18,32 +18,20 @@ jobs:
   arduino-esp32:
     name: Arduino ESP32
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - core: esp32:esp32
-            board: esp32:esp32:esp32
-            index_url: https://espressif.github.io/arduino-esp32/package_esp32_index.json
-          # - core: esp32:esp32
-          #   board: esp32:esp32:esp32
-          #   index_url: https://espressif.github.io/arduino-esp32/package_esp32_dev_index.json
-
     steps:
       - name: Install arduino-cli
         run: curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | BINDIR=/usr/local/bin sh
 
       - name: Update core index
-        run: arduino-cli core update-index --additional-urls "${{ matrix.index_url }}"
+        run: arduino-cli core update-index --additional-urls https://espressif.github.io/arduino-esp32/package_esp32_index.json
 
       - name: Install core
-        run: arduino-cli core install --additional-urls "${{ matrix.index_url }}" ${{ matrix.core }}
+        run: arduino-cli core install --additional-urls https://espressif.github.io/arduino-esp32/package_esp32_index.json esp32:esp32
 
       - name: Install ArduinoJson
         run: arduino-cli lib install ArduinoJson
 
       - name: Install AsyncTCP (ESP32)
-        if: ${{ matrix.core == 'esp32:esp32' }}
         run: ARDUINO_LIBRARY_ENABLE_UNSAFE_INSTALL=true arduino-cli lib install --git-url https://github.com/ESP32Async/AsyncTCP#v3.3.3
 
       - name: Checkout
@@ -55,35 +43,26 @@ jobs:
             echo "============================================================="
             echo "Building examples/$i..."
             echo "============================================================="
-            arduino-cli compile --library . --warnings none -b ${{ matrix.board }} "examples/$i/$i.ino"
+            arduino-cli compile --library . --warnings none -b esp32:esp32:esp32 "examples/$i/$i.ino"
           done
 
   arduino-esp8266:
     name: Arduino ESP8266
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - core: esp8266:esp8266
-            board: esp8266:esp8266:huzzah
-            index_url: https://arduino.esp8266.com/stable/package_esp8266com_index.json
-
     steps:
       - name: Install arduino-cli
         run: curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | BINDIR=/usr/local/bin sh
 
       - name: Update core index
-        run: arduino-cli core update-index --additional-urls "${{ matrix.index_url }}"
+        run: arduino-cli core update-index --additional-urls https://arduino.esp8266.com/stable/package_esp8266com_index.json
 
       - name: Install core
-        run: arduino-cli core install --additional-urls "${{ matrix.index_url }}" ${{ matrix.core }}
+        run: arduino-cli core install --additional-urls https://arduino.esp8266.com/stable/package_esp8266com_index.json esp8266:esp8266
 
       - name: Install ArduinoJson
         run: arduino-cli lib install ArduinoJson
 
       - name: Install ESPAsyncTCP (ESP8266)
-        if: ${{ matrix.core == 'esp8266:esp8266' }}
         run: ARDUINO_LIBRARY_ENABLE_UNSAFE_INSTALL=true arduino-cli lib install --git-url https://github.com/ESP32Async/ESPAsyncTCP#v2.0.0
 
       - name: Checkout
@@ -95,35 +74,26 @@ jobs:
             echo "============================================================="
             echo "Building examples/$i..."
             echo "============================================================="
-            arduino-cli compile --library . --warnings none -b ${{ matrix.board }} "examples/$i/$i.ino"
+            arduino-cli compile --library . --warnings none -b esp8266:esp8266:huzzah "examples/$i/$i.ino"
           done
 
   arduino-rp2040:
     name: Arduino RP2040
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - name: package_rp2040_index.json
-            core: rp2040:rp2040
-            board: rp2040:rp2040:rpipicow
-            index_url: https://github.com/earlephilhower/arduino-pico/releases/download/global/package_rp2040_index.json
+    runs-on: ubuntu-latest            
     steps:
       - name: Install arduino-cli
         run: curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | BINDIR=/usr/local/bin sh
 
       - name: Update core index
-        run: arduino-cli core update-index --additional-urls "${{ matrix.index_url }}"
+        run: arduino-cli core update-index --additional-urls https://github.com/earlephilhower/arduino-pico/releases/download/global/package_rp2040_index.json
 
       - name: Install core
-        run: arduino-cli core install --additional-urls "${{ matrix.index_url }}" ${{ matrix.core }}
+        run: arduino-cli core install --additional-urls https://github.com/earlephilhower/arduino-pico/releases/download/global/package_rp2040_index.json rp2040:rp2040
 
       - name: Install ArduinoJson
         run: arduino-cli lib install ArduinoJson
 
       - name: Install AsyncTCP (RP2040)
-        if: ${{ matrix.core == 'rp2040:rp2040' }}
         run: ARDUINO_LIBRARY_ENABLE_UNSAFE_INSTALL=true arduino-cli lib install --git-url https://github.com/khoih-prog/AsyncTCP_RP2040W#v1.2.0
 
       - name: Checkout
@@ -135,7 +105,7 @@ jobs:
             echo "============================================================="
             echo "Building examples/$i..."
             echo "============================================================="
-            arduino-cli compile --library . --warnings none -b ${{ matrix.board }} "examples/$i/$i.ino"
+            arduino-cli compile --library . --warnings none -b rp2040:rp2040:rpipicow "examples/$i/$i.ino"
           done
 
   report-success:
