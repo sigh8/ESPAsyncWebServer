@@ -548,13 +548,22 @@ myHandler.addMiddleware(&authMiddleware); // add authentication to a specific ha
 
 ### Libraries and projects that use AsyncWebServer
 
-- [WebSocketToSerial](https://github.com/hallard/WebSocketToSerial) - Debug serial devices through the web browser
-- [Sattrack](https://github.com/Hopperpop/Sattrack) - Track the ISS with ESP8266
+- [Beelance](https://beelance.carbou.me/) - Autonomous and remotely connected weight scale for beehives 🐝
+- [ElegantOTA](https://github.com/ayushsharma82/ElegantOTA) - OTA updates made slick and simple for everyone!
 - [ESP Radio](https://github.com/Edzelf/Esp-radio) - Icecast radio based on ESP8266 and VS1053
-- [VZero](https://github.com/andig/vzero) - the Wireless zero-config controller for volkszaehler.org
-- [ESPurna](https://github.com/xoseperez/espurna) - ESPurna  ("spark" in Catalan) is a custom C firmware for ESP8266 based smart switches. It was originally developed with the ITead Sonoff in mind.
-- [FauxmoESP](https://github.com/vintlabs/fauxmoESP) - Belkin WeMo emulator library for ESP8266.
+- [ESP-DASH](https://github.com/ayushsharma82/ESP-DASH) - ESP-DASH is a library for ESP32 Arduino that facilitates the use of a dashboard in an asynchronous way. I have contributed most of the recently newly added fixes and features of the OSS and Pro version
 - [ESP-RFID](https://github.com/omersiar/esp-rfid) - MFRC522 RFID Access Control Management project for ESP8266.
+- [ESPurna](https://github.com/xoseperez/espurna) - ESPurna ("spark" in Catalan) is a custom C firmware for ESP8266 based smart switches. It was originally developed with the ITead Sonoff in mind.
+- [FauxmoESP](https://github.com/vintlabs/fauxmoESP) - Belkin WeMo emulator library for ESP8266.
+- [MycilaESPConnect](https://mathieu.carbou.me/MycilaESPConnect) - Simple & Easy Network Manager with Captive Portal for ESP32 supporting Ethernet
+- [MycilaJSY](https://mathieu.carbou.me/MycilaJSY) - Arduino / ESP32 library for the JSY1031, JSY-MK-163, JSY-MK-193, JSY-MK-194, JSY-MK-227, JSY-MK-229, JSY-MK-333 families single-phase and three-phase AC bidirectional meters from Shenzhen Jiansiyan Technologies Co, Ltd.
+- [MycilaWebSerial](https://mathieu.carbou.me/MycilaWebSerial) - WebSerial is a Serial Monitor for ESP32 that can be accessed remotely via a web browser
+- [NetWizard](https://github.com/ayushsharma82/NetWizard) - No need to hard-code WiFi credentials ever again. (ESP32, RP2040+W)
+- [Sattrack](https://github.com/Hopperpop/Sattrack) - Track the ISS with ESP8266
+- [VZero](https://github.com/andig/vzero) - the Wireless zero-config controller for volkszaehler.org
+- [WebSerial](https://github.com/ayushsharma82/WebSerial) - A remote terminal library for wireless microcontrollers to log, monitor or debug your firmware/product
+- [WebSocketToSerial](https://github.com/hallard/WebSocketToSerial) - Debug serial devices through the web browser
+- [YaS☀️lR (Yet another Solar Router)](https://yasolr.carbou.me) - Heat water with your Solar Production Excess with the more powerful and precise solar diverter out there! |
 
 ### Request Variables
 
