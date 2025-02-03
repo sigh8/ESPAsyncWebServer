@@ -107,29 +107,3 @@ jobs:
             echo "============================================================="
             arduino-cli compile --library . --warnings none -b rp2040:rp2040:rpipicow "examples/$i/$i.ino"
           done
-
-  report-success:
-    name: Report Build (Arduino) success
-    runs-on: ubuntu-latest
-    needs: [arduino-esp32, arduino-esp8266, arduino-rp2040]
-    steps:
-      - name: Report success
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const owner = '${{ github.repository_owner }}';
-            const repo = '${{ github.repository }}'.split('/')[1];
-            const sha = '${{ github.sha }}';
-            core.debug(`owner: ${owner}`);
-            core.debug(`repo: ${repo}`);
-            core.debug(`sha: ${sha}`);
-            const { context: name, state } = (await github.rest.repos.createCommitStatus({
-              context: 'Build (Arduino)',
-              description: 'Build (Arduino) successful',
-              owner: owner,
-              repo: repo,
-              sha: sha,
-              state: 'success',
-              target_url: 'https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'
-            })).data;
-            core.info(`${name} is ${state}`);
