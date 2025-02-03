@@ -104,7 +104,7 @@ jobs:
           done
 
   platformio-specials:
-    name: PIO No Json
+    name: PIO Specials
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
