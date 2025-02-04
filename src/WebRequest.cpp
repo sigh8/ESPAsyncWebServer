@@ -29,6 +29,7 @@ AsyncWebServerRequest::AsyncWebServerRequest(AsyncWebServer *s, AsyncClient *c)
   c->onError(
     [](void *r, AsyncClient *c, int8_t error) {
       (void)c;
+      // log_e("AsyncWebServerRequest::_onError");
       AsyncWebServerRequest *req = (AsyncWebServerRequest *)r;
       req->_onError(error);
     },
@@ -37,6 +38,7 @@ AsyncWebServerRequest::AsyncWebServerRequest(AsyncWebServer *s, AsyncClient *c)
   c->onAck(
     [](void *r, AsyncClient *c, size_t len, uint32_t time) {
       (void)c;
+      // log_e("AsyncWebServerRequest::_onAck");
       AsyncWebServerRequest *req = (AsyncWebServerRequest *)r;
       req->_onAck(len, time);
     },
@@ -44,6 +46,7 @@ AsyncWebServerRequest::AsyncWebServerRequest(AsyncWebServer *s, AsyncClient *c)
   );
   c->onDisconnect(
     [](void *r, AsyncClient *c) {
+      // log_e("AsyncWebServerRequest::_onDisconnect");
       AsyncWebServerRequest *req = (AsyncWebServerRequest *)r;
       req->_onDisconnect();
       delete c;
@@ -53,6 +56,7 @@ AsyncWebServerRequest::AsyncWebServerRequest(AsyncWebServer *s, AsyncClient *c)
   c->onTimeout(
     [](void *r, AsyncClient *c, uint32_t time) {
       (void)c;
+      // log_e("AsyncWebServerRequest::_onTimeout");
       AsyncWebServerRequest *req = (AsyncWebServerRequest *)r;
       req->_onTimeout(time);
     },
@@ -61,6 +65,7 @@ AsyncWebServerRequest::AsyncWebServerRequest(AsyncWebServer *s, AsyncClient *c)
   c->onData(
     [](void *r, AsyncClient *c, void *buf, size_t len) {
       (void)c;
+      // log_e("AsyncWebServerRequest::_onData");
       AsyncWebServerRequest *req = (AsyncWebServerRequest *)r;
       req->_onData(buf, len);
     },
@@ -69,6 +74,7 @@ AsyncWebServerRequest::AsyncWebServerRequest(AsyncWebServer *s, AsyncClient *c)
   c->onPoll(
     [](void *r, AsyncClient *c) {
       (void)c;
+      // log_e("AsyncWebServerRequest::_onPoll");
       AsyncWebServerRequest *req = (AsyncWebServerRequest *)r;
       req->_onPoll();
     },
@@ -77,6 +83,8 @@ AsyncWebServerRequest::AsyncWebServerRequest(AsyncWebServer *s, AsyncClient *c)
 }
 
 AsyncWebServerRequest::~AsyncWebServerRequest() {
+  // log_e("AsyncWebServerRequest::~AsyncWebServerRequest");
+
   _this.reset();
 
   _headers.clear();
@@ -725,6 +733,16 @@ AsyncWebServerRequestPtr AsyncWebServerRequest::pause() {
   _this = std::shared_ptr<AsyncWebServerRequest>(this, doNotDelete);
   _paused = true;
   return _this;
+}
+
+void AsyncWebServerRequest::abort() {
+  if (!_sent) {
+    _sent = true;
+    _paused = false;
+    _this.reset();
+    // log_e("AsyncWebServerRequest::abort");
+    _client->abort();
+  }
 }
 
 size_t AsyncWebServerRequest::headers() const {
