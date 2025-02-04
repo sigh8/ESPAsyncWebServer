@@ -503,6 +503,17 @@ public:
   }
 
   /**
+   * @brief Aborts the request and close the client (RST).
+   * Mark the request as sent.
+   * If it was paused, it will be unpaused and it won't be possible to resume it.
+   */
+  void abort();
+
+  bool isSent() const {
+    return _sent;
+  }
+
+  /**
      * @brief Get the Request parameter by name
      *
      * @param name
