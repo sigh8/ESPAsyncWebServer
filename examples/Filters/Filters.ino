@@ -131,4 +131,6 @@ void setup() {
   // ESP.restart();
 }
 
-void loop() {}
+void loop() {
+  delay(100);
+}

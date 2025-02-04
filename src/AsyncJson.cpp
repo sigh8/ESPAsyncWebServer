@@ -152,8 +152,9 @@ void AsyncCallbackJsonWebHandler::handleBody(AsyncWebServerRequest *request, uin
       request->_tempObject = malloc(total);
       if (request->_tempObject == NULL) {
 #ifdef ESP32
-        log_e("Failed to allocate buffer");
+        log_e("Failed to allocate");
 #endif
+        request->abort();
         return;
       }
     }

@@ -26,7 +26,7 @@ static String generateEventMessage(const char *message, const char *event, uint3
 
   if (!str.reserve(len)) {
 #ifdef ESP32
-    log_e("Failed to allocate buffer");
+    log_e("Failed to allocate");
 #endif
     return emptyString;
   }
@@ -358,6 +358,12 @@ void AsyncEventSourceClient::set_max_inflight_bytes(size_t value) {
 
 void AsyncEventSource::authorizeConnect(ArAuthorizeConnectHandler cb) {
   AsyncAuthorizationMiddleware *m = new AsyncAuthorizationMiddleware(401, cb);
+  if (!m) {
+#ifdef ESP32
+    log_e("Failed to allocate");
+#endif
+    return;
+  }
   m->_freeOnRemoval = true;
   addMiddleware(m);
 }

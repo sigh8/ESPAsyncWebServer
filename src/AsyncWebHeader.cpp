@@ -25,7 +25,7 @@ String AsyncWebHeader::toString() const {
     str.concat(asyncsrv::T_rn);
   } else {
 #ifdef ESP32
-    log_e("Failed to allocate buffer");
+    log_e("Failed to allocate");
 #endif
   }
   return str;

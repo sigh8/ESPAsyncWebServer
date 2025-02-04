@@ -56,4 +56,6 @@ void setup() {
   server.begin();
 }
 
-void loop() {}
+void loop() {
+  delay(100);
+}

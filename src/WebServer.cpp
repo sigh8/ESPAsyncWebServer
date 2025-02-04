@@ -30,6 +30,12 @@ const char *fs::FileOpenMode::append = "a";
 
 AsyncWebServer::AsyncWebServer(uint16_t port) : _server(port) {
   _catchAllHandler = new AsyncCallbackWebHandler();
+  if (!_catchAllHandler) {
+#ifdef ESP32
+    log_e("Failed to allocate");
+#endif
+    return;
+  }
   _server.onClient(
     [](void *s, AsyncClient *c) {
       if (c == NULL) {
@@ -50,6 +56,7 @@ AsyncWebServer::~AsyncWebServer() {
   reset();
   end();
   delete _catchAllHandler;
+  _catchAllHandler = nullptr;  // Prevent potential use-after-free
 }
 
 AsyncWebRewrite &AsyncWebServer::addRewrite(std::shared_ptr<AsyncWebRewrite> rewrite) {
@@ -120,6 +127,8 @@ void AsyncWebServer::_handleDisconnect(AsyncWebServerRequest *request) {
 }
 
 void AsyncWebServer::_rewriteRequest(AsyncWebServerRequest *request) {
+  // the last rewrite that matches the request will be used
+  // we do not break the loop to allow for multiple rewrites to be applied and only the last one to be used (allows overriding)
   for (const auto &r : _rewrites) {
     if (r->match(request)) {
       request->_url = r->toUrl();
@@ -159,15 +168,21 @@ AsyncStaticWebHandler &AsyncWebServer::serveStatic(const char *uri, fs::FS &fs, 
 }
 
 void AsyncWebServer::onNotFound(ArRequestHandlerFunction fn) {
-  _catchAllHandler->onRequest(fn);
+  if (_catchAllHandler) {
+    _catchAllHandler->onRequest(fn);
+  }
 }
 
 void AsyncWebServer::onFileUpload(ArUploadHandlerFunction fn) {
-  _catchAllHandler->onUpload(fn);
+  if (_catchAllHandler) {
+    _catchAllHandler->onUpload(fn);
+  }
 }
 
 void AsyncWebServer::onRequestBody(ArBodyHandlerFunction fn) {
-  _catchAllHandler->onBody(fn);
+  if (_catchAllHandler) {
+    _catchAllHandler->onBody(fn);
+  }
 }
 
 AsyncWebHandler &AsyncWebServer::catchAllHandler() const {
@@ -178,7 +193,9 @@ void AsyncWebServer::reset() {
   _rewrites.clear();
   _handlers.clear();
 
-  _catchAllHandler->onRequest(NULL);
-  _catchAllHandler->onUpload(NULL);
-  _catchAllHandler->onBody(NULL);
+  if (_catchAllHandler) {
+    _catchAllHandler->onRequest(NULL);
+    _catchAllHandler->onUpload(NULL);
+    _catchAllHandler->onBody(NULL);
+  }
 }

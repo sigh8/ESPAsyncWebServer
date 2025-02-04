@@ -102,4 +102,6 @@ void setup() {
 }
 
 // not needed
-void loop() {}
+void loop() {
+  delay(100);
+}
