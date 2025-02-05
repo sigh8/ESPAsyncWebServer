@@ -80,6 +80,8 @@ static const char *htmlContent PROGMEM = R"(
 )";
 
 static const size_t htmlContentLength = strlen_P(htmlContent);
+static constexpr char characters[] = "0123456789ABCDEF";
+static size_t charactersIndex = 0;
 
 static AsyncWebServer server(80);
 static AsyncEventSource events("/events");
@@ -102,6 +104,41 @@ void setup() {
     // need to cast to uint8_t*
     // if you do not, the const char* will be copied in a temporary String buffer
     request->send(200, "text/html", (uint8_t *)htmlContent, htmlContentLength);
+  });
+
+  // IMPORTANT - DO NOT WRITE SUCH CODE IN PRODUCTON !
+  //
+  // This example simulates the slowdown that can happen when:
+  // - downloading a huge file from sdcard
+  // - doing some file listing on SDCard because it is horribly slow to get a file listing with file stats on SDCard.
+  // So in both cases, ESP would deadlock or TWDT would trigger.
+  //
+  // This example simulats that by slowing down the chunk callback:
+  // - d=2000 is the delay in ms in the callback
+  // - l=10000 is the length of the response
+  //
+  // time curl -N -v -G -d 'd=2000' -d 'l=10000'  http://192.168.4.1/slow.html --output -
+  //
+  server.on("/slow.html", HTTP_GET, [](AsyncWebServerRequest *request) {
+    uint32_t d = request->getParam("d")->value().toInt();
+    uint32_t l = request->getParam("l")->value().toInt();
+    Serial.printf("d = %" PRIu32 ", l = %" PRIu32 "\n", d, l);
+    AsyncWebServerResponse *response = request->beginChunkedResponse("text/html", [d, l](uint8_t *buffer, size_t maxLen, size_t index) -> size_t {
+      Serial.printf("%u\n", index);
+      // finished ?
+      if (index >= l) {
+        return 0;
+      }
+
+      // slow down the task to simulate some heavy processing, like SD card reading
+      delay(d);
+
+      memset(buffer, characters[charactersIndex], 256);
+      charactersIndex = (charactersIndex + 1) % sizeof(characters);
+      return 256;
+    });
+
+    request->send(response);
   });
 
   // SSS endpoint
