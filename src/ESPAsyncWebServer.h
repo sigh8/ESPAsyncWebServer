@@ -949,7 +949,7 @@ public:
     _skipServerMiddlewares = state;
     return *this;
   }
-  // skip all glboally defined server middlewares for this handler and only execute those defined for this handler specifically
+  // skip all globally defined server middlewares for this handler and only execute those defined for this handler specifically
   AsyncWebHandler &skipServerMiddlewares() {
     return setSkipServerMiddlewares(true);
   }
