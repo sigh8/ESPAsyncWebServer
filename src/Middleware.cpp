@@ -140,19 +140,21 @@ void AsyncAuthenticationMiddleware::run(AsyncWebServerRequest *request, ArMiddle
 }
 
 void AsyncHeaderFreeMiddleware::run(AsyncWebServerRequest *request, ArMiddlewareNext next) {
-  std::vector<const char *> reqHeaders;
-  request->getHeaderNames(reqHeaders);
-  for (const char *h : reqHeaders) {
+  std::list<const char *> toRemove;
+  for (auto &h : request->getHeaders()) {
     bool keep = false;
     for (const char *k : _toKeep) {
-      if (strcasecmp(h, k) == 0) {
+      if (strcasecmp(h.name().c_str(), k) == 0) {
         keep = true;
         break;
       }
     }
     if (!keep) {
-      request->removeHeader(h);
+      toRemove.push_back(h.name().c_str());
     }
+  }
+  for (const char *h : toRemove) {
+    request->removeHeader(h);
   }
   next();
 }

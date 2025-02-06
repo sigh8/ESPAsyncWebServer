@@ -218,7 +218,7 @@ private:
 
   std::list<AsyncWebHeader> _headers;
   std::list<AsyncWebParameter> _params;
-  std::vector<String> _pathParams;
+  std::list<String> _pathParams;
 
   std::unordered_map<const char *, String, std::hash<const char *>, std::equal_to<const char *>> _attributes;
 
@@ -790,13 +790,13 @@ public:
     _toKeep.push_back(name);
   }
   void unKeep(const char *name) {
-    _toKeep.erase(std::remove(_toKeep.begin(), _toKeep.end(), name), _toKeep.end());
+    _toKeep.remove(name);
   }
 
   void run(AsyncWebServerRequest *request, ArMiddlewareNext next);
 
 private:
-  std::vector<const char *> _toKeep;
+  std::list<const char *> _toKeep;
 };
 
 // filter out specific headers from the incoming request
@@ -806,13 +806,13 @@ public:
     _toRemove.push_back(name);
   }
   void unFilter(const char *name) {
-    _toRemove.erase(std::remove(_toRemove.begin(), _toRemove.end(), name), _toRemove.end());
+    _toRemove.remove(name);
   }
 
   void run(AsyncWebServerRequest *request, ArMiddlewareNext next);
 
 private:
-  std::vector<const char *> _toRemove;
+  std::list<const char *> _toRemove;
 };
 
 // curl-like logging of incoming requests

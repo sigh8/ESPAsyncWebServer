@@ -174,8 +174,9 @@ bool AsyncStaticWebHandler::_searchFile(AsyncWebServerRequest *request, const St
     char *_tempPath = (char *)malloc(pathLen + 1);
     if (_tempPath == NULL) {
 #ifdef ESP32
-      log_e("Failed to allocate buffer");
+      log_e("Failed to allocate");
 #endif
+      request->abort();
       request->_tempFile.close();
       return false;
     }
@@ -240,6 +241,14 @@ void AsyncStaticWebHandler::handleRequest(AsyncWebServerRequest *request) {
     response = new AsyncBasicResponse(304);  // Not modified
   } else {
     response = new AsyncFileResponse(request->_tempFile, filename, emptyString, false, _callback);
+  }
+
+  if (!response) {
+#ifdef ESP32
+    log_e("Failed to allocate");
+#endif
+    request->abort();
+    return;
   }
 
   response->addHeader(T_ETag, etag.c_str());

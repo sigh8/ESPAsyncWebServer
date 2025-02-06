@@ -67,8 +67,9 @@ size_t webSocketSendFrame(AsyncClient *client, bool final, uint8_t opcode, bool 
   uint8_t *buf = (uint8_t *)malloc(headLen);
   if (buf == NULL) {
 #ifdef ESP32
-    log_e("Failed to allocate buffer");
+    log_e("Failed to allocate");
 #endif
+    client->abort();
     return 0;
   }
 
@@ -170,7 +171,7 @@ public:
 
       if (_data == NULL) {
 #ifdef ESP32
-        log_e("Failed to allocate buffer");
+        log_e("Failed to allocate");
 #endif
         _len = 0;
       } else {
@@ -522,7 +523,8 @@ void AsyncWebSocketClient::close(uint16_t code, const char *message) {
       return;
     } else {
 #ifdef ESP32
-      log_e("Failed to allocate buffer");
+      log_e("Failed to allocate");
+      _client->abort();
 #endif
     }
   }
@@ -1252,6 +1254,13 @@ void AsyncWebSocket::handleRequest(AsyncWebServerRequest *request) {
   }
   const AsyncWebHeader *key = request->getHeader(WS_STR_KEY);
   AsyncWebServerResponse *response = new AsyncWebSocketResponse(key->value(), this);
+  if (response == NULL) {
+#ifdef ESP32
+    log_e("Failed to allocate");
+#endif
+    request->abort();
+    return;
+  }
   if (request->hasHeader(WS_STR_PROTOCOL)) {
     const AsyncWebHeader *protocol = request->getHeader(WS_STR_PROTOCOL);
     // ToDo: check protocol
@@ -1261,23 +1270,11 @@ void AsyncWebSocket::handleRequest(AsyncWebServerRequest *request) {
 }
 
 AsyncWebSocketMessageBuffer *AsyncWebSocket::makeBuffer(size_t size) {
-  AsyncWebSocketMessageBuffer *buffer = new AsyncWebSocketMessageBuffer(size);
-  if (buffer->length() != size) {
-    delete buffer;
-    return nullptr;
-  } else {
-    return buffer;
-  }
+  return new AsyncWebSocketMessageBuffer(size);
 }
 
 AsyncWebSocketMessageBuffer *AsyncWebSocket::makeBuffer(const uint8_t *data, size_t size) {
-  AsyncWebSocketMessageBuffer *buffer = new AsyncWebSocketMessageBuffer(data, size);
-  if (buffer->length() != size) {
-    delete buffer;
-    return nullptr;
-  } else {
-    return buffer;
-  }
+  return new AsyncWebSocketMessageBuffer(data, size);
 }
 
 /*
@@ -1298,7 +1295,7 @@ AsyncWebSocketResponse::AsyncWebSocketResponse(const String &key, AsyncWebSocket
 #else
   String k;
   if (!k.reserve(key.length() + WS_STR_UUID_LEN)) {
-    log_e("Failed to allocate buffer");
+    log_e("Failed to allocate");
     return;
   }
   k.concat(key);

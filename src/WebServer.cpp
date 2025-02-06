@@ -50,6 +50,7 @@ AsyncWebServer::~AsyncWebServer() {
   reset();
   end();
   delete _catchAllHandler;
+  _catchAllHandler = nullptr;  // Prevent potential use-after-free
 }
 
 AsyncWebRewrite &AsyncWebServer::addRewrite(std::shared_ptr<AsyncWebRewrite> rewrite) {
@@ -120,6 +121,8 @@ void AsyncWebServer::_handleDisconnect(AsyncWebServerRequest *request) {
 }
 
 void AsyncWebServer::_rewriteRequest(AsyncWebServerRequest *request) {
+  // the last rewrite that matches the request will be used
+  // we do not break the loop to allow for multiple rewrites to be applied and only the last one to be used (allows overriding)
   for (const auto &r : _rewrites) {
     if (r->match(request)) {
       request->_url = r->toUrl();

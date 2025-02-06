@@ -116,7 +116,7 @@ void AsyncWebServerRequest::_onData(void *buf, size_t len) {
     log_d("SSL/TLS handshake detected: resetting connection");
 #endif
     _parseState = PARSE_REQ_FAIL;
-    _client->abort();
+    abort();
     return;
   }
 #endif
@@ -131,7 +131,7 @@ void AsyncWebServerRequest::_onData(void *buf, size_t len) {
         // Check for null characters in header
         if (!str[i]) {
           _parseState = PARSE_REQ_FAIL;
-          _client->abort();
+          abort();
           return;
         }
         if (str[i] == '\n') {
@@ -143,10 +143,10 @@ void AsyncWebServerRequest::_onData(void *buf, size_t len) {
         str[len - 1] = 0;
         if (!_temp.reserve(_temp.length() + len)) {
 #ifdef ESP32
-          log_e("Failed to allocate buffer");
+          log_e("Failed to allocate");
 #endif
           _parseState = PARSE_REQ_FAIL;
-          _client->abort();
+          abort();
           return;
         }
         _temp.concat(str);
@@ -539,9 +539,10 @@ void AsyncWebServerRequest::_parseMultipartPostByte(uint8_t data, bool last) {
           _itemBuffer = (uint8_t *)malloc(RESPONSE_STREAM_BUFFER_SIZE);
           if (_itemBuffer == NULL) {
 #ifdef ESP32
-            log_e("Failed to allocate buffer");
+            log_e("Failed to allocate");
 #endif
             _multiParseState = PARSE_ERROR;
+            abort();
             return;
           }
           _itemBufferIndex = 0;
@@ -652,13 +653,13 @@ void AsyncWebServerRequest::_parseLine() {
   if (_parseState == PARSE_REQ_START) {
     if (!_temp.length()) {
       _parseState = PARSE_REQ_FAIL;
-      _client->abort();
+      abort();
     } else {
       if (_parseReqHead()) {
         _parseState = PARSE_REQ_HEADERS;
       } else {
         _parseState = PARSE_REQ_FAIL;
-        _client->abort();
+        abort();
       }
     }
     return;
@@ -795,12 +796,11 @@ const AsyncWebHeader *AsyncWebServerRequest::getHeader(size_t num) const {
 }
 
 size_t AsyncWebServerRequest::getHeaderNames(std::vector<const char *> &names) const {
-  const size_t size = _headers.size();
-  names.reserve(size);
+  const size_t size = names.size();
   for (const auto &h : _headers) {
     names.push_back(h.name().c_str());
   }
-  return size;
+  return names.size() - size;
 }
 
 bool AsyncWebServerRequest::removeHeader(const char *name) {
@@ -1002,8 +1002,9 @@ void AsyncWebServerRequest::requestAuthentication(AsyncAuthType method, const ch
         r->addHeader(T_WWW_AUTH, header.c_str());
       } else {
 #ifdef ESP32
-        log_e("Failed to allocate buffer");
+        log_e("Failed to allocate");
 #endif
+        abort();
       }
 
       break;
@@ -1027,8 +1028,9 @@ void AsyncWebServerRequest::requestAuthentication(AsyncAuthType method, const ch
           r->addHeader(T_WWW_AUTH, header.c_str());
         } else {
 #ifdef ESP32
-          log_e("Failed to allocate buffer");
+          log_e("Failed to allocate");
 #endif
+          abort();
         }
       }
       break;
@@ -1078,7 +1080,12 @@ const String &AsyncWebServerRequest::argName(size_t i) const {
 }
 
 const String &AsyncWebServerRequest::pathArg(size_t i) const {
-  return i < _pathParams.size() ? _pathParams[i] : emptyString;
+  if (i >= _pathParams.size()) {
+    return emptyString;
+  }
+  auto it = _pathParams.begin();
+  std::advance(it, i);
+  return *it;
 }
 
 const String &AsyncWebServerRequest::header(const char *name) const {
@@ -1110,7 +1117,7 @@ String AsyncWebServerRequest::urlDecode(const String &text) const {
   // Allocate the string internal buffer - never longer from source text
   if (!decoded.reserve(len)) {
 #ifdef ESP32
-    log_e("Failed to allocate buffer");
+    log_e("Failed to allocate");
 #endif
     return emptyString;
   }
