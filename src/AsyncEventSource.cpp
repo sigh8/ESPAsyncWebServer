@@ -358,12 +358,6 @@ void AsyncEventSourceClient::set_max_inflight_bytes(size_t value) {
 
 void AsyncEventSource::authorizeConnect(ArAuthorizeConnectHandler cb) {
   AsyncAuthorizationMiddleware *m = new AsyncAuthorizationMiddleware(401, cb);
-  if (!m) {
-#ifdef ESP32
-    log_e("Failed to allocate");
-#endif
-    return;
-  }
   m->_freeOnRemoval = true;
   addMiddleware(m);
 }

@@ -13,12 +13,6 @@ AsyncWebHandler &AsyncWebHandler::setFilter(ArRequestFilterFunction fn) {
 AsyncWebHandler &AsyncWebHandler::setAuthentication(const char *username, const char *password, AsyncAuthType authMethod) {
   if (!_authMiddleware) {
     _authMiddleware = new AsyncAuthenticationMiddleware();
-    if (!_authMiddleware) {
-#ifdef ESP32
-      log_e("Failed to allocate");
-#endif
-      return *this;
-    }
     _authMiddleware->_freeOnRemoval = true;
     addMiddleware(_authMiddleware);
   }

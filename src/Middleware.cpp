@@ -14,12 +14,6 @@ AsyncMiddlewareChain::~AsyncMiddlewareChain() {
 
 void AsyncMiddlewareChain::addMiddleware(ArMiddlewareCallback fn) {
   AsyncMiddlewareFunction *m = new AsyncMiddlewareFunction(fn);
-  if (!m) {
-#ifdef ESP32
-    log_e("Failed to allocate");
-#endif
-    return;
-  }
   m->_freeOnRemoval = true;
   _middlewares.emplace_back(m);
 }

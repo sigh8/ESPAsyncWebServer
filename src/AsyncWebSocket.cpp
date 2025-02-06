@@ -1270,23 +1270,11 @@ void AsyncWebSocket::handleRequest(AsyncWebServerRequest *request) {
 }
 
 AsyncWebSocketMessageBuffer *AsyncWebSocket::makeBuffer(size_t size) {
-  AsyncWebSocketMessageBuffer *buffer = new AsyncWebSocketMessageBuffer(size);
-  if (buffer->length() != size) {
-    delete buffer;
-    return nullptr;
-  } else {
-    return buffer;
-  }
+  return new AsyncWebSocketMessageBuffer(size);
 }
 
 AsyncWebSocketMessageBuffer *AsyncWebSocket::makeBuffer(const uint8_t *data, size_t size) {
-  AsyncWebSocketMessageBuffer *buffer = new AsyncWebSocketMessageBuffer(data, size);
-  if (buffer->length() != size) {
-    delete buffer;
-    return nullptr;
-  } else {
-    return buffer;
-  }
+  return new AsyncWebSocketMessageBuffer(data, size);
 }
 
 /*

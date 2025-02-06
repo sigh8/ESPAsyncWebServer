@@ -30,12 +30,6 @@ const char *fs::FileOpenMode::append = "a";
 
 AsyncWebServer::AsyncWebServer(uint16_t port) : _server(port) {
   _catchAllHandler = new AsyncCallbackWebHandler();
-  if (!_catchAllHandler) {
-#ifdef ESP32
-    log_e("Failed to allocate");
-#endif
-    return;
-  }
   _server.onClient(
     [](void *s, AsyncClient *c) {
       if (c == NULL) {
@@ -168,21 +162,15 @@ AsyncStaticWebHandler &AsyncWebServer::serveStatic(const char *uri, fs::FS &fs, 
 }
 
 void AsyncWebServer::onNotFound(ArRequestHandlerFunction fn) {
-  if (_catchAllHandler) {
-    _catchAllHandler->onRequest(fn);
-  }
+  _catchAllHandler->onRequest(fn);
 }
 
 void AsyncWebServer::onFileUpload(ArUploadHandlerFunction fn) {
-  if (_catchAllHandler) {
-    _catchAllHandler->onUpload(fn);
-  }
+  _catchAllHandler->onUpload(fn);
 }
 
 void AsyncWebServer::onRequestBody(ArBodyHandlerFunction fn) {
-  if (_catchAllHandler) {
-    _catchAllHandler->onBody(fn);
-  }
+  _catchAllHandler->onBody(fn);
 }
 
 AsyncWebHandler &AsyncWebServer::catchAllHandler() const {
@@ -193,9 +181,7 @@ void AsyncWebServer::reset() {
   _rewrites.clear();
   _handlers.clear();
 
-  if (_catchAllHandler) {
-    _catchAllHandler->onRequest(NULL);
-    _catchAllHandler->onUpload(NULL);
-    _catchAllHandler->onBody(NULL);
-  }
+  _catchAllHandler->onRequest(NULL);
+  _catchAllHandler->onUpload(NULL);
+  _catchAllHandler->onBody(NULL);
 }
