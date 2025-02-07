@@ -7,6 +7,8 @@ files:
   exclude:
     - "idf_component_examples/"
     - "idf_component_examples/**/*"
+    - "docs/"
+    - "docs/*"
     - "examples/"
     - "examples/**/*"
     - ".gitignore"
