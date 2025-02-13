@@ -28,6 +28,9 @@ dependencies:
   esp32async/asynctcp:
     version: "^3.3.5"
     require: public
+  bblanchon/arduinojson:
+    version: "^7.3.0"
+    require: public
 examples:
   - path: ./idf_component_examples/catchall
   - path: ./idf_component_examples/serversentevents
