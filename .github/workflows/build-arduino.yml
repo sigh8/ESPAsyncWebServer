@@ -116,10 +116,10 @@ jobs:
         run: curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | BINDIR=/usr/local/bin sh
 
       - name: Update core index
-        run: arduino-cli core update-index --additional-urls https://github.com/earlephilhower/arduino-pico/releases/download/global/package_rp2040_index.json
+        run: arduino-cli core update-index --additional-urls https://github.com/earlephilhower/arduino-pico/releases/download/4.4.3/package_rp2040_index.json
 
       - name: Install core
-        run: arduino-cli core install --additional-urls https://github.com/earlephilhower/arduino-pico/releases/download/global/package_rp2040_index.json rp2040:rp2040
+        run: arduino-cli core install --additional-urls https://github.com/earlephilhower/arduino-pico/releases/download/4.4.3/package_rp2040_index.json rp2040:rp2040
 
       - name: Install ArduinoJson
         run: arduino-cli lib install ArduinoJson
