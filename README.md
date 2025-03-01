@@ -15,7 +15,7 @@
 
 [![Documentation](https://img.shields.io/badge/Wiki-ESPAsyncWebServer-blue?logo=github)](https://github.com/ESP32Async/ESPAsyncWebServer/wiki)
 
-## Asynchronous HTTP and WebSocket Server Library for ESP32, ESP8266 and RP2040
+## Asynchronous HTTP and WebSocket Server Library for ESP32, ESP8266, RP2040 and RP2350
 
 Supports: WebSocket, SSE, Authentication, Arduino Json 7, File Upload, Static File serving, URL Rewrite, URL Redirect, etc.
 
