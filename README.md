@@ -100,7 +100,7 @@ platform = https://github.com/maxgerhardt/platform-raspberrypi.git
 board = rpipicow
 board_build.core = earlephilhower
 lib_deps =
-  ayushsharma82/RPAsyncTCP
+  ayushsharma82/RPAsyncTCP@^1.3.1
   ESP32Async/ESPAsyncWebServer
 lib_ignore =
   lwIP_ESPHost
