@@ -1077,7 +1077,7 @@ public:
   void end();
 
   tcp_state state() const {
-#if defined(ESP8266) || defined(TARGET_RP2040) || defined(TARGET_RP2350) || defined(PICO_RP2040) || defined(PICO_RP2350)
+#ifdef ESP8266
     // ESPAsyncTCP and RPAsyncTCP methods are not corrected declared with const for immutable ones.
     return static_cast<tcp_state>(const_cast<AsyncWebServer *>(this)->_server.status());
 #else
