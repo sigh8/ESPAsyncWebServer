@@ -4,9 +4,10 @@
 #ifndef _ESPAsyncWebServer_H_
 #define _ESPAsyncWebServer_H_
 
-#include "Arduino.h"
+#include <Arduino.h>
+#include <FS.h>
+#include <lwip/tcpbase.h>
 
-#include "FS.h"
 #include <algorithm>
 #include <deque>
 #include <functional>
@@ -1074,6 +1075,15 @@ public:
 
   void begin();
   void end();
+
+  tcp_state state() const {
+#if defined(ESP8266) || defined(TARGET_RP2040) || defined(TARGET_RP2350) || defined(PICO_RP2040) || defined(PICO_RP2350)
+    // ESPAsyncTCP and RPAsyncTCP methods are not corrected declared with const for immutable ones.
+    return static_cast<tcp_state>(const_cast<AsyncWebServer *>(this)->_server.status());
+#else
+    return static_cast<tcp_state>(_server.status());
+#endif
+  }
 
 #if ASYNC_TCP_SSL_ENABLED
   void onSslFileRequest(AcSSlFileHandler cb, void *arg);
