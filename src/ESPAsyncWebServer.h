@@ -469,7 +469,9 @@ public:
   }
 
   AsyncWebServerResponse *beginChunkedResponse(const char *contentType, AwsResponseFiller callback, AwsTemplateProcessor templateCallback = nullptr);
-  AsyncWebServerResponse *beginChunkedResponse(const String &contentType, AwsResponseFiller callback, AwsTemplateProcessor templateCallback = nullptr);
+  AsyncWebServerResponse *beginChunkedResponse(const String &contentType, AwsResponseFiller callback, AwsTemplateProcessor templateCallback = nullptr) {
+    return beginChunkedResponse(contentType.c_str(), callback, templateCallback);
+  }
 
   AsyncResponseStream *beginResponseStream(const char *contentType, size_t bufferSize = RESPONSE_STREAM_BUFFER_SIZE);
   AsyncResponseStream *beginResponseStream(const String &contentType, size_t bufferSize = RESPONSE_STREAM_BUFFER_SIZE) {
