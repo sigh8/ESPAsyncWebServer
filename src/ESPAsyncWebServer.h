@@ -541,7 +541,7 @@ public:
      */
   const AsyncWebParameter *getParam(size_t num) const;
   const AsyncWebParameter *getParam(int num) const {
-    return getParam((size_t)num);
+    return num < 0 ? nullptr : getParam((size_t)num);
   }
 
   size_t args() const {
@@ -559,11 +559,11 @@ public:
 #endif
   const String &arg(size_t i) const;  // get request argument value by number
   const String &arg(int i) const {
-    return arg((size_t)i);
+    return i < 0 ? emptyString : arg((size_t)i);
   };
   const String &argName(size_t i) const;  // get request argument name by number
   const String &argName(int i) const {
-    return argName((size_t)i);
+    return i < 0 ? emptyString : argName((size_t)i);
   };
   bool hasArg(const char *name) const;  // check if argument exists
   bool hasArg(const String &name) const {
@@ -575,7 +575,7 @@ public:
 
   const String &ASYNCWEBSERVER_REGEX_ATTRIBUTE pathArg(size_t i) const;
   const String &ASYNCWEBSERVER_REGEX_ATTRIBUTE pathArg(int i) const {
-    return pathArg((size_t)i);
+    return i < 0 ? emptyString : pathArg((size_t)i);
   }
 
   // get request header value by name
@@ -590,11 +590,11 @@ public:
 
   const String &header(size_t i) const;  // get request header value by number
   const String &header(int i) const {
-    return header((size_t)i);
+    return i < 0 ? emptyString : header((size_t)i);
   };
   const String &headerName(size_t i) const;  // get request header name by number
   const String &headerName(int i) const {
-    return headerName((size_t)i);
+    return i < 0 ? emptyString : headerName((size_t)i);
   };
 
   size_t headers() const;  // get header count
@@ -618,7 +618,7 @@ public:
 
   const AsyncWebHeader *getHeader(size_t num) const;
   const AsyncWebHeader *getHeader(int num) const {
-    return getHeader((size_t)num);
+    return num < 0 ? nullptr : getHeader((size_t)num);
   };
 
   const std::list<AsyncWebHeader> &getHeaders() const {
