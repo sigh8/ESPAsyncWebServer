@@ -540,6 +540,9 @@ public:
      * @return const AsyncWebParameter*
      */
   const AsyncWebParameter *getParam(size_t num) const;
+  const AsyncWebParameter *getParam(int num) const {
+    return num < 0 ? nullptr : getParam((size_t)num);
+  }
 
   size_t args() const {
     return params();
@@ -554,9 +557,15 @@ public:
 #ifdef ESP8266
   const String &arg(const __FlashStringHelper *data) const;  // get request argument value by F(name)
 #endif
-  const String &arg(size_t i) const;      // get request argument value by number
+  const String &arg(size_t i) const;  // get request argument value by number
+  const String &arg(int i) const {
+    return i < 0 ? emptyString : arg((size_t)i);
+  };
   const String &argName(size_t i) const;  // get request argument name by number
-  bool hasArg(const char *name) const;    // check if argument exists
+  const String &argName(int i) const {
+    return i < 0 ? emptyString : argName((size_t)i);
+  };
+  bool hasArg(const char *name) const;  // check if argument exists
   bool hasArg(const String &name) const {
     return hasArg(name.c_str());
   };
@@ -565,6 +574,9 @@ public:
 #endif
 
   const String &ASYNCWEBSERVER_REGEX_ATTRIBUTE pathArg(size_t i) const;
+  const String &ASYNCWEBSERVER_REGEX_ATTRIBUTE pathArg(int i) const {
+    return i < 0 ? emptyString : pathArg((size_t)i);
+  }
 
   // get request header value by name
   const String &header(const char *name) const;
@@ -576,8 +588,14 @@ public:
   const String &header(const __FlashStringHelper *data) const;  // get request header value by F(name)
 #endif
 
-  const String &header(size_t i) const;      // get request header value by number
+  const String &header(size_t i) const;  // get request header value by number
+  const String &header(int i) const {
+    return i < 0 ? emptyString : header((size_t)i);
+  };
   const String &headerName(size_t i) const;  // get request header name by number
+  const String &headerName(int i) const {
+    return i < 0 ? emptyString : headerName((size_t)i);
+  };
 
   size_t headers() const;  // get header count
 
@@ -599,6 +617,9 @@ public:
 #endif
 
   const AsyncWebHeader *getHeader(size_t num) const;
+  const AsyncWebHeader *getHeader(int num) const {
+    return num < 0 ? nullptr : getHeader((size_t)num);
+  };
 
   const std::list<AsyncWebHeader> &getHeaders() const {
     return _headers;
