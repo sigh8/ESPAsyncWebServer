@@ -840,6 +840,14 @@ size_t AsyncResponseStream::write(const uint8_t *data, size_t len) {
   if (len > _content->room()) {
     size_t needed = len - _content->room();
     _content->resizeAdd(needed);
+    // log a warning if allocation failed, but do not return: keep writing the bytes we can
+    // with _content->write: if len is more than the available size in the buffer, only
+    // the available size will be written
+    if (len > _content->room()) {
+#ifdef ESP32
+      log_e("Failed to allocate");
+#endif
+    }
   }
   size_t written = _content->write((const char *)data, len);
   _contentLength += written;
