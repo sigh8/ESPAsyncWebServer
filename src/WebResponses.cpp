@@ -822,7 +822,7 @@ AsyncResponseStream::AsyncResponseStream(const char *contentType, size_t bufferS
   _contentType = contentType;
   // internal buffer will be null on allocation failure
   _content = std::unique_ptr<cbuf>(new cbuf(bufferSize));
-  if (_content->size() != bufferSize) {
+  if (bufferSize && _content->size() < bufferSize) {
 #ifdef ESP32
     log_e("Failed to allocate");
 #endif
