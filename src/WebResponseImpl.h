@@ -168,6 +168,12 @@ public:
   size_t _fillBuffer(uint8_t *buf, size_t maxLen) override final;
   size_t write(const uint8_t *data, size_t len);
   size_t write(uint8_t data);
+  /**
+   * @brief Returns the number of bytes available in the stream.
+   */
+  size_t available() const {
+    return _content.length();  // note: _content.available() is not const
+  }
   using Print::write;
 };
 
