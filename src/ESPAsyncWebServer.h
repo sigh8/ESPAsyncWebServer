@@ -23,7 +23,7 @@
 #include <ESPAsyncTCP.h>
 #elif defined(TARGET_RP2040) || defined(TARGET_RP2350) || defined(PICO_RP2040) || defined(PICO_RP2350)
 #include <RPAsyncTCP.h>
-#include <HTTP_Method.h>
+#include <ASYNC_HTTP_Method.h>
 #include <WiFi.h>
 #include <http_parser.h>
 #else
@@ -64,14 +64,14 @@ typedef enum http_method WebRequestMethod;
 #else
 #ifndef WEBSERVER_H
 typedef enum {
-  HTTP_GET = 0b00000001,
-  HTTP_POST = 0b00000010,
-  HTTP_DELETE = 0b00000100,
-  HTTP_PUT = 0b00001000,
-  HTTP_PATCH = 0b00010000,
-  HTTP_HEAD = 0b00100000,
-  HTTP_OPTIONS = 0b01000000,
-  HTTP_ANY = 0b01111111,
+  ASYNC_HTTP_GET = 0b00000001,
+  ASYNC_HTTP_POST = 0b00000010,
+  ASYNC_HTTP_DELETE = 0b00000100,
+  ASYNC_HTTP_PUT = 0b00001000,
+  ASYNC_HTTP_PATCH = 0b00010000,
+  ASYNC_HTTP_HEAD = 0b00100000,
+  ASYNC_HTTP_OPTIONS = 0b01000000,
+  ASYNC_HTTP_ANY = 0b01111111,
 } WebRequestMethod;
 #endif
 #endif
@@ -299,10 +299,10 @@ public:
   bool isExpectedRequestedConnType(RequestedConnectionType erct1, RequestedConnectionType erct2 = RCT_NOT_USED, RequestedConnectionType erct3 = RCT_NOT_USED)
     const;
   bool isWebSocketUpgrade() const {
-    return _method == HTTP_GET && isExpectedRequestedConnType(RCT_WS);
+    return _method == ASYNC_HTTP_GET && isExpectedRequestedConnType(RCT_WS);
   }
   bool isSSE() const {
-    return _method == HTTP_GET && isExpectedRequestedConnType(RCT_EVENT);
+    return _method == ASYNC_HTTP_GET && isExpectedRequestedConnType(RCT_EVENT);
   }
   bool isHTTP() const {
     return isExpectedRequestedConnType(RCT_DEFAULT, RCT_HTTP);
@@ -1158,7 +1158,7 @@ public:
   bool removeHandler(AsyncWebHandler *handler);
 
   AsyncCallbackWebHandler &on(const char *uri, ArRequestHandlerFunction onRequest) {
-    return on(uri, HTTP_ANY, onRequest);
+    return on(uri, ASYNC_HTTP_ANY, onRequest);
   }
   AsyncCallbackWebHandler &on(
     const char *uri, WebRequestMethodComposite method, ArRequestHandlerFunction onRequest, ArUploadHandlerFunction onUpload = nullptr,
