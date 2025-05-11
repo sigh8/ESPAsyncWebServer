@@ -66,7 +66,7 @@ protected:
   bool _isRegex;
 
 public:
-  AsyncCallbackWebHandler() : _uri(), _method(HTTP_ANY), _onRequest(NULL), _onUpload(NULL), _onBody(NULL), _isRegex(false) {}
+  AsyncCallbackWebHandler() : _uri(), _method(ASYNC_HTTP_ANY), _onRequest(NULL), _onUpload(NULL), _onBody(NULL), _isRegex(false) {}
   void setUri(const String &uri);
   void setMethod(WebRequestMethodComposite method) {
     _method = method;
